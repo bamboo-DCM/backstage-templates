@@ -2,7 +2,7 @@ name: CI-CD on Develop push
 on:
   push:
     branches:
-      - master
+      - main
 
 env:
   AWS_REGION: us-east-1
