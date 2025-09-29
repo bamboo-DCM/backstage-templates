@@ -7,7 +7,7 @@ on:
 env:
   AWS_REGION: us-east-1
   ECR_REGISTRY: 457992978309.dkr.ecr.us-east-1.amazonaws.com
-  ECR_REPOSITORY: bamboo-brazil-prod-${{values.app_name}}-ecr
+  ECR_REPOSITORY: 'bamboo-brazil-prod-${{values.app_name}}-ecr'
 
 jobs:
   ci:
