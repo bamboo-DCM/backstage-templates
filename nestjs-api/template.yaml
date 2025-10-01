@@ -32,6 +32,10 @@ spec:
             - production
 
   steps:
+    - id: get-coolify-projects
+      name: Get Coolify Projects
+      action: coolify:projects:get
+
     - id: fetch-base
       name: Fetch Base
       action: fetch:template
@@ -62,3 +66,5 @@ spec:
     links:
       - title: Repository
         url: ${{ steps['publish'].output.remoteUrl }}
+      - title: Coolify Projects
+        url: ${{ steps['get-coolify-projects'].output.projects }}
