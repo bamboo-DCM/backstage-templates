@@ -48,7 +48,7 @@ spec:
           app_name: ${{parameters.component_id}}
           app_env: ${{parameters.environment}}
           app_description: ${{parameters.description}}
-          repositoryUri: ${{ steps['create-ecr-repository'].output.repositoryUri }}:prod
+          repositoryUri: ${{ steps['create-ecr-repository'].output.repositoryUri }}
 
     - id: publish
       name: Publish
