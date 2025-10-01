@@ -73,8 +73,8 @@ spec:
         project_uuid: "qsckwcgc0cgkc4s0w0gco8s0"
         server_uuid: "tsoc0go0g4cc44o4wggo80g4"
         environment_name: "production"
-        docker_registry_image_name: "gabrielmelogm/test-api"
-        docker_registry_image_tag: "latest"
+        docker_registry_image_name: ${{ steps['create-ecr-repository'].output.repositoryUri }}
+        docker_registry_image_tag: "prod"
         ports_exposes: "3000"
         name: ${{ parameters.component_id }}
         description: ${{ parameters.description }}
