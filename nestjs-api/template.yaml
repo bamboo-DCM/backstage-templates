@@ -32,6 +32,14 @@ spec:
             - production
 
   steps:
+    - id: create-ecr-repository
+      name: Create ECR Repository
+      action: aws:ecr:create
+      input:
+        region: us-east-1
+        repositoryName: bamboo-brazil-${{ parameters.environment }}-${{ parameters.component_id }}-ecr
+        environment: ${{ parameters.environment }}
+
     - id: fetch-base
       name: Fetch Base
       action: fetch:template
@@ -41,6 +49,7 @@ spec:
           app_name: ${{parameters.component_id}}
           app_env: ${{parameters.environment}}
           app_description: ${{parameters.description}}
+          repositoryUri: ${{ steps['create-ecr-repository'].output.repositoryUri }}
 
     - id: publish
       name: Publish
