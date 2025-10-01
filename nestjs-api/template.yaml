@@ -74,6 +74,12 @@ spec:
         protectDefaultBranch: false
         repoVisibility: public
 
+    - id: create-route53-register
+      name: Create Route53 Register
+      action: aws:route53:create
+      input:
+        domain: ${{ parameters.component_id }}.bamboodcm.com
+
     - id: register
       name: Register
       action: catalog:register
