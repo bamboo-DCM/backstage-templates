@@ -36,7 +36,6 @@ spec:
       name: Create ECR Repository
       action: aws:ecr:create
       input:
-        region: us-east-1
         repositoryName: bamboo-brazil-${{ parameters.environment }}-${{ parameters.component_id }}-ecr
         environment: ${{ parameters.environment }}
 
