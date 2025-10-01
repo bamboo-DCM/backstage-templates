@@ -39,6 +39,20 @@ spec:
         repositoryName: bamboo-brazil-${{ parameters.environment }}-${{ parameters.component_id }}-ecr
         environment: ${{ parameters.environment }}
 
+    - id: create-coolify-app
+      name: Create Coolify Application
+      action: coolify:application:create
+      input:
+        project_uuid: "qsckwcgc0cgkc4s0w0gco8s0"
+        server_uuid: "tsoc0go0g4cc44o4wggo80g4"
+        environment_name: "production"
+        docker_registry_image_name: ${{ steps['create-ecr-repository'].output.repositoryUri }}
+        docker_registry_image_tag: "prod"
+        ports_exposes: "3000"
+        name: ${{ parameters.component_id }}
+        description: ${{ parameters.description }}
+        domains: https://${{ parameters.component_id }}.bamboodcm.com
+
     - id: fetch-base
       name: Fetch Base
       action: fetch:template
@@ -49,6 +63,7 @@ spec:
           app_env: ${{parameters.environment}}
           app_description: ${{parameters.description}}
           repositoryUri: ${{ steps['create-ecr-repository'].output.repositoryUri }}
+          application_uuid: ${{ steps['create-coolify-app'].output.application_uuid }}
 
     - id: publish
       name: Publish
@@ -65,20 +80,6 @@ spec:
       input:
         repoContentsUrl: ${{ steps['publish'].output.repoContentsUrl }}
         catalogInfoPath: "/catalog-info.yaml"
-    
-    - id: create-coolify-app
-      name: Create Coolify Application
-      action: coolify:application:create
-      input:
-        project_uuid: "qsckwcgc0cgkc4s0w0gco8s0"
-        server_uuid: "tsoc0go0g4cc44o4wggo80g4"
-        environment_name: "production"
-        docker_registry_image_name: ${{ steps['create-ecr-repository'].output.repositoryUri }}
-        docker_registry_image_tag: "prod"
-        ports_exposes: "3000"
-        name: ${{ parameters.component_id }}
-        description: ${{ parameters.description }}
-        domains: https://${{ parameters.component_id }}.bamboodcm.com
 
   output:
     links:
