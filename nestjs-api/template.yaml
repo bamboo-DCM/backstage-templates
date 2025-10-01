@@ -78,7 +78,7 @@ spec:
       name: Create Route53 Register
       action: aws:route53:create
       input:
-        domain: ${{ parameters.component_id }}.bamboodcm.com
+        subDomain: ${{ parameters.component_id }}
 
     - id: register
       name: Register
