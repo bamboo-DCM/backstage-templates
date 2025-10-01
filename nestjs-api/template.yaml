@@ -70,7 +70,7 @@ spec:
         ports_exposes: "3000"
         name: ${{ parameters.component_id }}
         description: ${{ parameters.description }}
-        domains: ${{ parameters.component_id }}.bamboodcm.com
+        domains: https://${{ parameters.component_id }}.bamboodcm.com
 
   output:
     links:
