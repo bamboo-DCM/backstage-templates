@@ -86,3 +86,5 @@ spec:
         url: ${{ steps['publish'].output.remoteUrl }}
       - title: Coolify Application
         url: ${{ steps['create-coolify-app'].output.domain }}
+      - title: Coolify Application
+        url: ${{ steps['create-coolify-app'].output.application_uuid }}
