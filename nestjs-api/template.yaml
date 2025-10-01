@@ -32,10 +32,6 @@ spec:
             - production
 
   steps:
-    - id: get-coolify-projects
-      name: Get Coolify Projects
-      action: coolify:projects:get
-
     - id: fetch-base
       name: Fetch Base
       action: fetch:template
@@ -61,10 +57,24 @@ spec:
       input:
         repoContentsUrl: ${{ steps['publish'].output.repoContentsUrl }}
         catalogInfoPath: "/catalog-info.yaml"
+    
+    - id: create-coolify-app
+      name: Create Coolify Application
+      action: coolify:application:create
+      input:
+        project_uuid: "qsckwcgc0cgkc4s0w0gco8s0"
+        server_uuid: "tsoc0go0g4cc44o4wggo80g4"
+        environment_name: "production"
+        docker_registry_image_name: "gabrielmelogm/test-api"
+        docker_registry_image_tag: "latest"
+        ports_exposes: "3000"
+        name: ${{ parameters.component_id }}
+        description: ${{ parameters.description }}
+        domains: ${{ parameters.component_id }}.bamboodcm.com
 
   output:
     links:
       - title: Repository
         url: ${{ steps['publish'].output.remoteUrl }}
-      - title: Coolify Projects
-        url: ${{ steps['get-coolify-projects'].output.projects }}
+      - title: Coolify Application
+        url: ${{ steps['create-coolify-app'].output.domain }}
