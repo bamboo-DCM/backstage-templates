@@ -60,4 +60,4 @@ jobs:
       - name: Deploy Coolify
         run: |
           curl -X GET "https://coolify.bamboodcm.com/api/v1/deploy?uuid=${{values.application_uuid}}&force=true" \
-            -H "Authorization: Bearer ${{ secrets.COOLIFY_TOKEN }}"
+            -H "Authorization: Bearer ${{ '${{ secrets.COOLIFY_TOKEN }}' }}"
