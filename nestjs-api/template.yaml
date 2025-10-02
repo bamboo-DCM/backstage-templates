@@ -108,6 +108,15 @@ spec:
         protectDefaultBranch: false
         repoVisibility: public
 
+    - id: create-develop-branch
+      name: Create Develop Branch
+      if: ${{ 'development' in parameters.environment }}
+      action: github:create:branch
+      input:
+        repoUrl: github.com?owner=bamboo-DCM&repo=${{parameters.component_id}}
+        branchName: develop
+        sourceBranch: main
+
     - id: create-route53-register-dev
       name: Create Route53 Register (Development)
       if: ${{ 'development' in parameters.environment }}
