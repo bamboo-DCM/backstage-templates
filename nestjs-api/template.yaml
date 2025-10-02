@@ -32,7 +32,7 @@ spec:
             enum:
               - development
               - production
-          ui:field: multiselect
+          ui:widget: checkboxes
 
   steps:
     - id: create-ecr-repository-dev
