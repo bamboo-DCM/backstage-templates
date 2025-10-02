@@ -6,4 +6,8 @@ This application has two endpoints
 
 # How to access the app?
 
-You can access the app by accessing this URL: `${{values.app_env}}-${{values.app_name}}.bamboodcm.com/api/healthz`
+## Production
+You can access the app by accessing this URL: `${{values.app_name}}.bamboodcm.com/api/docs`
+
+## Development
+You can access the app by accessing this URL: `dev-${{values.app_name}}.bamboodcm.com/api/docs`
