@@ -29,10 +29,14 @@ spec:
           description: The environment where this component will be deployed
           items:
             type: string
-            enum:
-              - development
-              - production
+          uniqueItems: true
           ui:widget: checkboxes
+          ui:options:
+            enumOptions:
+              - value: development
+                label: Development
+              - value: production
+                label: Production
 
   steps:
     - id: create-ecr-repository-dev
