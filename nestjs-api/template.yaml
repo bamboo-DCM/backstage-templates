@@ -134,8 +134,8 @@ spec:
       - title: Repository
         url: ${{ steps['publish'].output.remoteUrl }}
       - title: Development Domain
-        url: https://dev-${{ parameters.component_id }}.bamboodcm.com
+        url: https://dev-${{ parameters.component_id }}.bamboodcm.com/api/docs
         if: ${{ 'development' in parameters.environment }}
       - title: Production Domain
-        url: https://${{ parameters.component_id }}.bamboodcm.com
+        url: https://${{ parameters.component_id }}.bamboodcm.com/api/docs
         if: ${{ 'production' in parameters.environment }}
