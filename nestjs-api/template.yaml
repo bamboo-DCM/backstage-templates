@@ -25,28 +25,56 @@ spec:
           description: A short description of the component
         environment:
           title: Environment
-          type: string
+          type: array
           description: The environment where this component will be deployed
-          enum:
-            - development
-            - production
+          items:
+            type: string
+            enum:
+              - development
+              - production
+          ui:field: multiselect
 
   steps:
-    - id: create-ecr-repository
-      name: Create ECR Repository
+    - id: create-ecr-repository-dev
+      name: Create ECR Repository (Development)
+      if: ${{ 'development' in parameters.environment }}
       action: aws:ecr:create
       input:
-        repositoryName: bamboo-brazil-${{ parameters.environment }}-${{ parameters.component_id }}-ecr
-        environment: ${{ parameters.environment }}
+        repositoryName: bamboo-brazil-dev-${{ parameters.component_id }}-ecr
+        environment: development
 
-    - id: create-coolify-app
-      name: Create Coolify Application
+    - id: create-ecr-repository-prod
+      name: Create ECR Repository (Production)
+      if: ${{ 'production' in parameters.environment }}
+      action: aws:ecr:create
+      input:
+        repositoryName: bamboo-brazil-prod-${{ parameters.component_id }}-ecr
+        environment: production
+
+    - id: create-coolify-app-dev
+      name: Create Coolify Application (Development)
+      if: ${{ 'development' in parameters.environment }}
+      action: coolify:application:create
+      input:
+        project_uuid: "qsckwcgc0cgkc4s0w0gco8s0"
+        server_uuid: "tsoc0go0g4cc44o4wggo80g4"
+        environment_name: "development"
+        docker_registry_image_name: ${{ steps['create-ecr-repository-dev'].output.repositoryUri }}
+        docker_registry_image_tag: "dev"
+        ports_exposes: "3000"
+        name: ${{ parameters.component_id }}
+        description: ${{ parameters.description }}
+        domains: https://dev-${{ parameters.component_id }}.bamboodcm.com
+
+    - id: create-coolify-app-prod
+      name: Create Coolify Application (Production)
+      if: ${{ 'production' in parameters.environment }}
       action: coolify:application:create
       input:
         project_uuid: "qsckwcgc0cgkc4s0w0gco8s0"
         server_uuid: "tsoc0go0g4cc44o4wggo80g4"
         environment_name: "production"
-        docker_registry_image_name: ${{ steps['create-ecr-repository'].output.repositoryUri }}
+        docker_registry_image_name: ${{ steps['create-ecr-repository-prod'].output.repositoryUri }}
         docker_registry_image_tag: "prod"
         ports_exposes: "3000"
         name: ${{ parameters.component_id }}
@@ -62,8 +90,10 @@ spec:
           app_name: ${{parameters.component_id}}
           app_env: ${{parameters.environment}}
           app_description: ${{parameters.description}}
-          repositoryUri: ${{ steps['create-ecr-repository'].output.repositoryUri }}
-          application_uuid: ${{ steps['create-coolify-app'].output.application_uuid }}
+          repositoryUri_dev: ${{ steps['create-ecr-repository-dev'].output.repositoryUri }}
+          repositoryUri_prod: ${{ steps['create-ecr-repository-prod'].output.repositoryUri }}
+          application_uuid_dev: ${{ steps['create-coolify-app-dev'].output.application_uuid }}
+          application_uuid_prod: ${{ steps['create-coolify-app-prod'].output.application_uuid }}
 
     - id: publish
       name: Publish
@@ -74,8 +104,16 @@ spec:
         protectDefaultBranch: false
         repoVisibility: public
 
-    - id: create-route53-register
-      name: Create Route53 Register
+    - id: create-route53-register-dev
+      name: Create Route53 Register (Development)
+      if: ${{ 'development' in parameters.environment }}
+      action: aws:route53:create
+      input:
+        subDomain: dev-${{ parameters.component_id }}.bamboodcm.com
+
+    - id: create-route53-register-prod
+      name: Create Route53 Register (Production)
+      if: ${{ 'production' in parameters.environment }}
       action: aws:route53:create
       input:
         subDomain: ${{ parameters.component_id }}.bamboodcm.com
@@ -91,7 +129,21 @@ spec:
     links:
       - title: Repository
         url: ${{ steps['publish'].output.remoteUrl }}
-      - title: Coolify Application
-        url: ${{ steps['create-coolify-app'].output.domain }}
-      - title: Coolify Application
-        url: ${{ steps['create-coolify-app'].output.application_uuid }}
+      - title: Development Domain
+        url: https://dev-${{ parameters.component_id }}.bamboodcm.com
+        if: ${{ 'development' in parameters.environment }}
+      - title: Production Domain
+        url: https://${{ parameters.component_id }}.bamboodcm.com
+        if: ${{ 'production' in parameters.environment }}
+      - title: Coolify Application (Dev)
+        url: ${{ steps['create-coolify-app-dev'].output.domain }}
+        if: ${{ 'development' in parameters.environment }}
+      - title: Coolify Application UUID (Dev)
+        url: ${{ steps['create-coolify-app-dev'].output.application_uuid }}
+        if: ${{ 'development' in parameters.environment }}
+      - title: Coolify Application (Prod)
+        url: ${{ steps['create-coolify-app-prod'].output.domain }}
+        if: ${{ 'production' in parameters.environment }}
+      - title: Coolify Application UUID (Prod)
+        url: ${{ steps['create-coolify-app-prod'].output.application_uuid }}
+        if: ${{ 'production' in parameters.environment }}
