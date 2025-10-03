@@ -1,0 +1,17 @@
+services:
+  postgres:
+    image: postgres:17-alpine
+    # container_name: ${{values.app_name}}-postgres
+    container_name: postgres
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_DB}
+    ports:
+      - "${POSTGRES_PORT}:${POSTGRES_PORT}"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    restart: on-failure:3
+
+volumes:
+  postgres_data:
