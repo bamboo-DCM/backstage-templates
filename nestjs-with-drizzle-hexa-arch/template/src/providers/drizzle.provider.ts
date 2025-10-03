@@ -17,6 +17,7 @@ export const drizzleProvider = [
         password: configService.get<string>('POSTGRES_PASSWORD'),
         database: configService.get<string>('POSTGRES_DB'),
         port: configService.get<number>('POSTGRES_PORT'),
+        ssl: false,
       });
       try {
         await pool.connect();
