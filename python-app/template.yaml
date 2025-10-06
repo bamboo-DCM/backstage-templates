@@ -47,6 +47,14 @@ spec:
         repositoryName: bamboo-brazil-dev-${{ parameters.component_id }}-ecr
         environment: development
 
+    - id: create-ecr-repository-prod
+      name: Create ECR Repository (Production)
+      if: ${{ 'production' in parameters.environment }}
+      action: aws:ecr:create
+      input:
+        repositoryName: bamboo-brazil-prod-${{ parameters.component_id }}-ecr
+        environment: production
+
     - id: create-coolify-app-dev
       name: Create Coolify Application (Development)
       if: ${{ 'development' in parameters.environment }}
@@ -61,6 +69,21 @@ spec:
         name: ${{ parameters.component_id }}
         description: ${{ parameters.description }}
         domains: https://dev-${{ parameters.component_id }}.bamboodcm.com
+
+    - id: create-coolify-app-prod
+      name: Create Coolify Application (Production)
+      if: ${{ 'production' in parameters.environment }}
+      action: coolify:application:create
+      input:
+        project_uuid: "qsckwcgc0cgkc4s0w0gco8s0"
+        server_uuid: "tsoc0go0g4cc44o4wggo80g4"
+        environment_name: "production"
+        docker_registry_image_name: ${{ steps['create-ecr-repository-prod'].output.repositoryUri }}
+        docker_registry_image_tag: "prod"
+        ports_exposes: "3000"
+        name: ${{ parameters.component_id }}
+        description: ${{ parameters.description }}
+        domains: https://${{ parameters.component_id }}.bamboodcm.com
 
     - id: fetch-base
       name: Fetch Base
@@ -85,13 +108,6 @@ spec:
         protectDefaultBranch: false
         repoVisibility: public
 
-    - id: create-route53-register-dev
-      name: Create Route53 Register (Development)
-      if: ${{ 'development' in parameters.environment }}
-      action: aws:route53:create
-      input:
-        subDomain: dev-${{ parameters.component_id }}.bamboodcm.com
-
     - id: register
       name: Register
       action: catalog:register
@@ -106,3 +122,6 @@ spec:
       - title: Development Domain
         url: https://dev-${{ parameters.component_id }}.bamboodcm.com/api/docs
         if: ${{ 'development' in parameters.environment }}
+      - title: Production Domain
+        url: https://${{ parameters.component_id }}.bamboodcm.com/api/docs
+        if: ${{ 'production' in parameters.environment }}
