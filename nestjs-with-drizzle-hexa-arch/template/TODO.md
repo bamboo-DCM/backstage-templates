@@ -1,8 +1,8 @@
 - [X] Configurar o swagger
 - [X] Criar docker compose com banco postgres
-- [ ] Configurar drizzle orm
-- [ ] Criar estrutura clean arch
-- [ ] Criar Dockerfile
+- [X] Configurar drizzle orm
+- [X] Criar estrutura clean arch
+- [X] Criar Dockerfile
 - [ ] Criar catalog yaml
 - [ ] Criar wiki
 - [ ] Criar github-action

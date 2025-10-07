@@ -1,8 +1,7 @@
 services:
   postgres:
     image: postgres:17-alpine
-    # container_name: ${{values.app_name}}-postgres
-    container_name: postgres
+    container_name: ${{values.app_name}}-postgres
     environment:
       - POSTGRES_USER=${POSTGRES_USER}
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
