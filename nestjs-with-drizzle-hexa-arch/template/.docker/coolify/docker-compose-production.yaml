@@ -1,0 +1,43 @@
+services:
+  ${{values.app_name}}:
+    image: ${{values.repositoryUri_prod}}:prod
+    pull_policy: always
+    container_name: ${{values.app_name}}
+    networks:
+      - coolify
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/api/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    environment:
+      - NODE_ENV=${NODE_ENV}
+      - DD_API_KEY=${DD_API_KEY}      
+      - DD_ENV=prod
+      - DD_SERVICE=${{values.app_name}}
+      - DD_APM_IGNORE_RESOURCES=GET /health
+      - DD_APM_ENABLED=true
+      - DD_TRACE_ENABLED=true
+      - DD_AGENT_HOST=datadog
+      - DD_TRACE_AGENT_PORT=8126
+      - DD_LOGS_ENABLED=true
+  datadog:
+    image: datadog/agent:latest
+    container_name: ${{values.app_name}}-datadog
+    ports:
+      - "8126:8126"
+    networks:
+    environment:
+      - DD_API_KEY=${DD_API_KEY}
+      - DD_SITE=${DD_SITE}
+      - DD_APM_ENABLED=true
+      - DD_LOGS_ENABLED=true
+      - DD_CONTAINER_EXCLUDE=${DD_CONTAINER_EXCLUDE}
+      - DD_APM_RECEIVER_PORT=8126
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+
+networks:
+  coolify:
+    external: true
