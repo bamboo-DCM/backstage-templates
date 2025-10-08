@@ -1,7 +1,7 @@
 FROM python:3.11-slim
 
 # Definir diretório de trabalho
-WORKDIR /dev
+WORKDIR /app
 
 # Copiar arquivos de dependências
 COPY requirements.txt ./
@@ -13,4 +13,4 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY . .
 
 # Comando para manter o container vivo rodando seu main.py
-CMD ['tail', '-f', '/dev/null']
+CMD ["tail", "-f", "/dev/null"]
