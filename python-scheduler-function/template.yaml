@@ -1,9 +1,9 @@
 apiVersion: scaffolder.backstage.io/v1beta3
 kind: Template
 metadata:
-  name: python-app
-  title: Python APP
-  description: Provisions a minimalistic Python APP application
+  name: python-scheduler-function
+  title: Python Scheduler Function
+  description: Provisions a minimalistic Python Scheduler Function application
 spec:
   owner: dev-team
   type: service
