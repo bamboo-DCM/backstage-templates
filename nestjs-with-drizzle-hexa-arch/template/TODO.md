@@ -3,7 +3,7 @@
 - [X] Configurar drizzle orm
 - [X] Criar estrutura clean arch
 - [X] Criar Dockerfile
-- [ ] Criar catalog yaml
+- [X] Criar github-action
+- [X] Criar catalog yaml
 - [ ] Criar wiki
-- [ ] Criar github-action
 - [ ] Criar template action

@@ -1,0 +1,23 @@
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: ${{values.app_name}}
+  description: Uma API RESTful construída com NestJS, Arquitetura hexagonal e Drizzle ORM (Postgres).
+  annotations:
+    github.com/project-slug: bamboo-DCM/${{values.app_name}}
+    backstage.io/techdocs-ref: dir:.
+  links:
+{%- if 'development' in values.app_env %}
+    - url: https://dev-${{values.app_name}}.bamboodcm.com/api/docs
+      title: Development Domain
+      icon: dashboard
+{%- endif %}
+{%- if 'production' in values.app_env %}
+    - url: https://${{values.app_name}}.bamboodcm.com/api/docs
+      title: Production Domain
+      icon: dashboard
+{%- endif %}
+spec:
+  type: service
+  owner: dev-team
+  lifecycle: experimental
