@@ -68,7 +68,6 @@ spec:
         ports_exposes: "3000"
         name: ${{ parameters.component_id }}
         description: ${{ parameters.description }}
-        domains: https://dev-${{ parameters.component_id }}.bamboodcm.com
 
     - id: create-coolify-app-prod
       name: Create Coolify Application (Production)
@@ -83,7 +82,6 @@ spec:
         ports_exposes: "3000"
         name: ${{ parameters.component_id }}
         description: ${{ parameters.description }}
-        domains: https://${{ parameters.component_id }}.bamboodcm.com
 
     - id: fetch-base
       name: Fetch Base
@@ -119,9 +117,3 @@ spec:
     links:
       - title: Repository
         url: ${{ steps['publish'].output.remoteUrl }}
-      - title: Development Domain
-        url: https://dev-${{ parameters.component_id }}.bamboodcm.com/api/docs
-        if: ${{ 'development' in parameters.environment }}
-      - title: Production Domain
-        url: https://${{ parameters.component_id }}.bamboodcm.com/api/docs
-        if: ${{ 'production' in parameters.environment }}
