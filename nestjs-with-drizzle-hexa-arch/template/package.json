@@ -31,10 +31,12 @@
     "dd-trace": "^5.70.0",
     "dotenv": "^17.2.3",
     "drizzle-orm": "^0.44.6",
+    "nest-winston": "^1.10.2",
     "nestjs-ddtrace": "^6.0.0",
     "pg": "^8.16.3",
     "reflect-metadata": "^0.2.2",
     "rxjs": "^7.8.1",
+    "winston": "^3.18.3",
     "zod": "^4.1.11"
   },
   "devDependencies": {
