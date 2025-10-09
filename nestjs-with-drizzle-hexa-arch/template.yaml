@@ -84,6 +84,20 @@ spec:
         postgres_password: 4w204xLJGFVCky
         postgres_db: ${{ parameters.component_id }}
 
+    - id: create-postgres-database-prod
+      name: Create Coolify Postgres Database (Production)
+      if: ${{ 'production' in parameters.environment }}
+      action: coolify:database:postgres:create
+      input:
+        project_uuid: "qsckwcgc0cgkc4s0w0gco8s0"
+        server_uuid: "tsoc0go0g4cc44o4wggo80g4"
+        environment_name: "production"
+        name: ${{ parameters.component_id }}
+        image: ${{ parameters.postgres_version }}
+        postgres_user: ${{ parameters.component_id }}
+        postgres_password: SypIDcIBbGTLw9
+        postgres_db: ${{ parameters.component_id }}
+
 
     # - id: create-coolify-app-dev
     #   name: Create Coolify Application (Development)
