@@ -1,0 +1,171 @@
+apiVersion: scaffolder.backstage.io/v1beta3
+kind: Template
+metadata:
+  name: nestjs-with-drizzle-hexa-arch
+  title: NestJS + Drizzle
+  description: Provisions a API application with postgres database (Drizzle)
+spec:
+  owner: dev-team
+  type: service
+
+  parameters:
+    - title: Fill in some steps
+      required:
+        - component_id
+        - environment
+      properties:
+        component_id:
+          title: Component name
+          type: string
+          description: Provide a component (microservice) name
+          pattern: '^([a-zA-Z][a-zA-Z0-9]*)(-[a-zA-Z0-9]+)*$'
+        description:
+          title: Description
+          type: string
+          description: A short description of the component
+        environment:
+          title: Environment
+          type: array
+          description: The environment where this component will be deployed
+          items:
+            type: string
+          uniqueItems: true
+          ui:widget: checkboxes
+          ui:options:
+            enumOptions:
+              - value: development
+                label: Development
+              - value: production
+                label: Production
+        postgres_version:
+          title: Postgres Version
+          type: string
+          description: Select the PostgreSQL version to use
+          default: postgres:17-alpine
+          enum:
+            - postgres:17-alpine
+            - postgres:16-alpine
+            - postgres:15-alpine
+            - postgres:14-alpine
+          enumNames:
+            - Postgres 17
+            - Postgres 16
+            - Postgres 15
+            - Postgres 14
+
+  steps:
+    # - id: create-ecr-repository-dev
+    #   name: Create ECR Repository (Development)
+    #   if: ${{ 'development' in parameters.environment }}
+    #   action: aws:ecr:create
+    #   input:
+    #     repositoryName: bamboo-brazil-dev-${{ parameters.component_id }}-ecr
+    #     environment: development
+
+    # - id: create-ecr-repository-prod
+    #   name: Create ECR Repository (Production)
+    #   if: ${{ 'production' in parameters.environment }}
+    #   action: aws:ecr:create
+    #   input:
+    #     repositoryName: bamboo-brazil-prod-${{ parameters.component_id }}-ecr
+    #     environment: production
+
+    - id: create-postgres-database-dev
+      name: Create Coolify Postgres Database (Development)
+      if: ${{ 'development' in parameters.environment }}
+      action: coolify:database:postgres:create
+      input:
+        project_uuid: "qsckwcgc0cgkc4s0w0gco8s0"
+        server_uuid: "tsoc0go0g4cc44o4wggo80g4"
+        environment_name: "development"
+        name: ${{ parameters.component_id }}
+        image: ${{ parameters.postgres_version }}
+        postgres_user: ${{ parameters.component_id }}
+        postgres_password: ${{ uuidv4() }}
+        postgres_db: ${{ parameters.component_id }}
+
+
+    # - id: create-coolify-app-dev
+    #   name: Create Coolify Application (Development)
+    #   if: ${{ 'development' in parameters.environment }}
+    #   action: coolify:application:create
+    #   input:
+    #     project_uuid: "qsckwcgc0cgkc4s0w0gco8s0"
+    #     server_uuid: "tsoc0go0g4cc44o4wggo80g4"
+    #     environment_name: "development"
+    #     docker_registry_image_name: ${{ steps['create-ecr-repository-dev'].output.repositoryUri }}
+    #     docker_registry_image_tag: "dev"
+    #     ports_exposes: "3000"
+    #     name: ${{ parameters.component_id }}
+    #     description: ${{ parameters.description }}
+    #     domains: https://dev-${{ parameters.component_id }}.bamboodcm.com
+
+    # - id: create-coolify-app-prod
+    #   name: Create Coolify Application (Production)
+    #   if: ${{ 'production' in parameters.environment }}
+    #   action: coolify:application:create
+    #   input:
+    #     project_uuid: "qsckwcgc0cgkc4s0w0gco8s0"
+    #     server_uuid: "tsoc0go0g4cc44o4wggo80g4"
+    #     environment_name: "production"
+    #     docker_registry_image_name: ${{ steps['create-ecr-repository-prod'].output.repositoryUri }}
+    #     docker_registry_image_tag: "prod"
+    #     ports_exposes: "3000"
+    #     name: ${{ parameters.component_id }}
+    #     description: ${{ parameters.description }}
+    #     domains: https://${{ parameters.component_id }}.bamboodcm.com
+
+    - id: fetch-base
+      name: Fetch Base
+      action: fetch:template
+      input:
+        url: ./template
+        values:
+          app_name: ${{parameters.component_id}}
+          app_env: ${{parameters.environment}}
+          app_description: ${{parameters.description}}
+          repositoryUri_dev: ${{ steps['create-ecr-repository-dev'].output.repositoryUri }}
+          repositoryUri_prod: ${{ steps['create-ecr-repository-prod'].output.repositoryUri }}
+          application_uuid_dev: ${{ steps['create-coolify-app-dev'].output.application_uuid }}
+          application_uuid_prod: ${{ steps['create-coolify-app-prod'].output.application_uuid }}
+
+    # - id: publish
+    #   name: Publish
+    #   action: publish:github
+    #   input:
+    #     description: This is ${{ parameters.component_id }}
+    #     repoUrl: github.com?owner=bamboo-DCM&repo=${{parameters.component_id}}
+    #     protectDefaultBranch: false
+    #     repoVisibility: public
+
+    # - id: create-route53-register-dev
+    #   name: Create Route53 Register (Development)
+    #   if: ${{ 'development' in parameters.environment }}
+    #   action: aws:route53:create
+    #   input:
+    #     subDomain: dev-${{ parameters.component_id }}.bamboodcm.com
+
+    # - id: create-route53-register-prod
+    #   name: Create Route53 Register (Production)
+    #   if: ${{ 'production' in parameters.environment }}
+    #   action: aws:route53:create
+    #   input:
+    #     subDomain: ${{ parameters.component_id }}.bamboodcm.com
+
+    - id: register
+      name: Register
+      action: catalog:register
+      input:
+        repoContentsUrl: ${{ steps['publish'].output.repoContentsUrl }}
+        catalogInfoPath: "/catalog-info.yaml"
+
+  output:
+    links:
+      - title: Repository
+        url: ${{ steps['publish'].output.remoteUrl }}
+      - title: Development Domain
+        url: https://dev-${{ parameters.component_id }}.bamboodcm.com/api/docs
+        if: ${{ 'development' in parameters.environment }}
+      - title: Production Domain
+        url: https://${{ parameters.component_id }}.bamboodcm.com/api/docs
+        if: ${{ 'production' in parameters.environment }}
