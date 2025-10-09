@@ -5,5 +5,5 @@
 - [X] Criar Dockerfile
 - [X] Criar github-action
 - [X] Criar catalog yaml
-- [ ] Criar wiki
+- [X] Criar wiki
 - [ ] Criar template action
