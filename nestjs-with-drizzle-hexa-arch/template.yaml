@@ -81,7 +81,7 @@ spec:
         name: ${{ parameters.component_id }}
         image: ${{ parameters.postgres_version }}
         postgres_user: ${{ parameters.component_id }}
-        postgres_password: ${{ uuidv4() }}
+        postgres_password: 4w204xLJGFVCky
         postgres_db: ${{ parameters.component_id }}
 
 
