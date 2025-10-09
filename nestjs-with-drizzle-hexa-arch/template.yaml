@@ -143,14 +143,14 @@ spec:
           application_uuid_dev: ${{ steps['create-coolify-app-dev'].output.application_uuid }}
           application_uuid_prod: ${{ steps['create-coolify-app-prod'].output.application_uuid }}
 
-    # - id: publish
-    #   name: Publish
-    #   action: publish:github
-    #   input:
-    #     description: This is ${{ parameters.component_id }}
-    #     repoUrl: github.com?owner=bamboo-DCM&repo=${{parameters.component_id}}
-    #     protectDefaultBranch: false
-    #     repoVisibility: public
+    - id: publish
+      name: Publish
+      action: publish:github
+      input:
+        description: This is ${{ parameters.component_id }}
+        repoUrl: github.com?owner=bamboo-DCM&repo=${{parameters.component_id}}
+        protectDefaultBranch: false
+        repoVisibility: public
 
     # - id: create-route53-register-dev
     #   name: Create Route53 Register (Development)
