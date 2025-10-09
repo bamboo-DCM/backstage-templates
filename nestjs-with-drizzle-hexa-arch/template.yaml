@@ -152,12 +152,12 @@ spec:
     #   input:
     #     subDomain: ${{ parameters.component_id }}.bamboodcm.com
 
-    - id: register
-      name: Register
-      action: catalog:register
-      input:
-        repoContentsUrl: ${{ steps['publish'].output.repoContentsUrl }}
-        catalogInfoPath: "/catalog-info.yaml"
+    # - id: register
+    #   name: Register
+    #   action: catalog:register
+    #   input:
+    #     repoContentsUrl: ${{ steps['publish'].output.repoContentsUrl }}
+    #     catalogInfoPath: "/catalog-info.yaml"
 
   output:
     links:
