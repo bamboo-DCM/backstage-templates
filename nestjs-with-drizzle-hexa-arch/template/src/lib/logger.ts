@@ -1,5 +1,5 @@
 import { ConfigModule } from '@nestjs/config';
-import { env } from 'env';
+import { env } from '../../env';
 import { format, transports, type LoggerOptions } from 'winston';
 
 ConfigModule.forRoot();
