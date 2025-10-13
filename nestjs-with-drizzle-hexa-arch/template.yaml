@@ -54,21 +54,21 @@ spec:
             - Postgres 14
 
   steps:
-    # - id: create-ecr-repository-dev
-    #   name: Create ECR Repository (Development)
-    #   if: ${{ 'development' in parameters.environment }}
-    #   action: aws:ecr:create
-    #   input:
-    #     repositoryName: bamboo-brazil-dev-${{ parameters.component_id }}-ecr
-    #     environment: development
+    - id: create-ecr-repository-dev
+      name: Create ECR Repository (Development)
+      if: ${{ 'development' in parameters.environment }}
+      action: aws:ecr:create
+      input:
+        repositoryName: bamboo-brazil-dev-${{ parameters.component_id }}-ecr
+        environment: development
 
-    # - id: create-ecr-repository-prod
-    #   name: Create ECR Repository (Production)
-    #   if: ${{ 'production' in parameters.environment }}
-    #   action: aws:ecr:create
-    #   input:
-    #     repositoryName: bamboo-brazil-prod-${{ parameters.component_id }}-ecr
-    #     environment: production
+    - id: create-ecr-repository-prod
+      name: Create ECR Repository (Production)
+      if: ${{ 'production' in parameters.environment }}
+      action: aws:ecr:create
+      input:
+        repositoryName: bamboo-brazil-prod-${{ parameters.component_id }}-ecr
+        environment: production
 
     - id: create-postgres-database-dev
       name: Create Coolify Postgres Database (Development)
@@ -152,19 +152,19 @@ spec:
         protectDefaultBranch: false
         repoVisibility: public
 
-    # - id: create-route53-register-dev
-    #   name: Create Route53 Register (Development)
-    #   if: ${{ 'development' in parameters.environment }}
-    #   action: aws:route53:create
-    #   input:
-    #     subDomain: dev-${{ parameters.component_id }}.bamboodcm.com
+    - id: create-route53-register-dev
+      name: Create Route53 Register (Development)
+      if: ${{ 'development' in parameters.environment }}
+      action: aws:route53:create
+      input:
+        subDomain: dev-${{ parameters.component_id }}.bamboodcm.com
 
-    # - id: create-route53-register-prod
-    #   name: Create Route53 Register (Production)
-    #   if: ${{ 'production' in parameters.environment }}
-    #   action: aws:route53:create
-    #   input:
-    #     subDomain: ${{ parameters.component_id }}.bamboodcm.com
+    - id: create-route53-register-prod
+      name: Create Route53 Register (Production)
+      if: ${{ 'production' in parameters.environment }}
+      action: aws:route53:create
+      input:
+        subDomain: ${{ parameters.component_id }}.bamboodcm.com
 
     - id: register
       name: Register
